@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>فرص عمل - الرياض</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+
+        .question {
+            color: #444;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .btn-group {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 18px 30px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            box-shadow: 0 4px 15px rgba(245, 87, 108, 0.4);
+        }
+
+        .btn-secondary:hover {
+            box-shadow: 0 6px 20px rgba(245, 87, 108, 0.6);
+        }
+
+        .btn-tertiary {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            box-shadow: 0 4px 15px rgba(79, 172, 254, 0.4);
+        }
+
+        .btn-tertiary:hover {
+            box-shadow: 0 6px 20px rgba(79, 172, 254, 0.6);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .back-btn {
+            background: #f0f0f0;
+            color: #666;
+            padding: 12px 25px;
+            font-size: 14px;
+            margin-top: 20px;
+            box-shadow: none;
+        }
+
+        .back-btn:hover {
+            background: #e0e0e0;
+        }
+
+        .footer {
+            text-align: center;
+            color: #999;
+            font-size: 12px;
+            margin-top: 30px;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 25px;
+            }
+            h1 {
+                font-size: 24px;
+            }
+            .btn {
+                padding: 15px 20px;
+                font-size: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- المرحلة 1: اختيار الموقع -->
+        <div id="step1">
+            <h1>🔍 فرص عمل في الرياض</h1>
+            <p class="subtitle">انضم لقروب الوظائف المناسب لك</p>
+            
+            <p class="question">أين تسكن؟</p>
+            <div class="btn-group">
+                <button class="btn" onclick="selectLocation('inside')">
+                    داخل حي السلي / المدينة الصناعية الثانية
+                </button>
+                <button class="btn btn-secondary" onclick="selectLocation('outside')">
+                    خارج حي السلي
+                </button>
+            </div>
+        </div>
+
+        <!-- المرحلة 2: اختيار الجنسية -->
+        <div id="step2" class="hidden">
+            <h1>🌍 اختر جنسيتك</h1>
+            <p class="subtitle">حتى نوجهك للقروب المناسب</p>
+            
+            <div class="btn-group">
+                <button class="btn" onclick="selectNationality('bangladeshi')">
+                    🇧🇩 بنجلاديشي
+                </button>
+                <button class="btn btn-secondary" onclick="selectNationality('indian')">
+                    🇮🇳 هندي
+                </button>
+                <button class="btn btn-tertiary" onclick="selectNationality('other')">
+                    🌏 جنسيات أخرى
+                </button>
+            </div>
+            
+            <button class="btn back-btn" onclick="goBack()">رجوع</button>
+        </div>
+
+        <!-- المرحلة 3: رسالة التوجيه -->
+        <div id="step3" class="hidden">
+            <h1>✅ تم!</h1>
+            <p class="subtitle" id="redirectMessage">جاري التوجيه لقروب الواتساب...</p>
+            
+            <button class="btn back-btn" onclick="restart()">البداية من جديد</button>
+        </div>
+
+        <div class="footer">
+            جميع الحقوق محفوظة © 2026
+        </div>
+    </div>
+
+    <script>
+        let selectedLocation = '';
+        let selectedNationality = '';
+
+        // روابط قروبات الواتساب - غيّر هذه الروابط فقط!
+        const whatsappGroups = {
+            // قروب 1: بنجلاديشيين داخل السلي
+            inside_bangladeshi: 'https://chat.whatsapp.com/GROUP1',
+
+            // قروب 2: بنجلاديشيين خارج السلي
+            outside_bangladeshi: 'https://chat.whatsapp.com/GROUP2',
+
+            // قروب 3: هنود (داخل أو خارج السلي)
+            indian: 'https://chat.whatsapp.com/GROUP3',
+
+            // جنسيات أخرى (احتياطي)
+            other: 'https://chat.whatsapp.com/GROUP4'
+        };
+
+        function selectLocation(location) {
+            selectedLocation = location;
+            document.getElementById('step1').classList.add('hidden');
+            document.getElementById('step2').classList.remove('hidden');
+        }
+
+        function selectNationality(nationality) {
+            selectedNationality = nationality;
+            
+            // تحديد القروب المناسب
+            let groupKey = '';
+            
+            if (nationality === 'bangladeshi') {
+                groupKey = selectedLocation === 'inside' ? 'inside_bangladeshi' : 'outside_bangladeshi';
+            } else if (nationality === 'indian') {
+                groupKey = 'indian';
+            } else {
+                groupKey = 'other';
+            }
+            
+            const whatsappLink = whatsappGroups[groupKey];
+            
+            // تحديث الرسالة
+            let message = '';
+            if (selectedLocation === 'outside' && nationality === 'bangladeshi') {
+                message = '⚠️ ملاحظة: أغلب الأعمال في حي السلي / المدينة الصناعية الثانية<br><br>جاري التوجيه...';
+            } else {
+                message = '✅ جاري التوجيه لقروب الواتساب المناسب...';
+            }
+            
+            document.getElementById('redirectMessage').innerHTML = message;
+            document.getElementById('step2').classList.add('hidden');
+            document.getElementById('step3').classList.remove('hidden');
+            
+            // التوجيه بعد 2 ثانية
+            setTimeout(() => {
+                window.location.href = whatsappLink;
+            }, 2000);
+        }
+
+        function goBack() {
+            document.getElementById('step2').classList.add('hidden');
+            document.getElementById('step1').classList.remove('hidden');
+            selectedLocation = '';
+        }
+
+        function restart() {
+            document.getElementById('step3').classList.add('hidden');
+            document.getElementById('step1').classList.remove('hidden');
+            selectedLocation = '';
+            selectedNationality = '';
+        }
+    </script>
+</body>
+</html>
